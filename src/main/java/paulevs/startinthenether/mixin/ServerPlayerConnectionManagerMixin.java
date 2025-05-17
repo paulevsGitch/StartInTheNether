@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import paulevs.startinthenether.NetherSpawn;
 
 @Mixin(ServerPlayerConnectionManager.class)
 public class ServerPlayerConnectionManagerMixin {
@@ -22,16 +23,7 @@ public class ServerPlayerConnectionManagerMixin {
 		ServerPlayer player, int dimensionID, CallbackInfoReturnable<ServerPlayer> info,
 		@Local ServerLevel serverLevel
 	) {
-		if (player.y >= player.level.getTopY()) {
-			int cx = (int) player.x;
-			int cz = (int) player.z;
-			for (int i = 0; i < 256; i++) {
-				player.x = cx + player.level.random.nextInt(128) - 63.5;
-				player.z = cz + player.level.random.nextInt(128) - 63.5;
-				for (player.y = player.level.getBottomY(); player.y < player.level.getTopY(); player.y += 1) {
-					if (serverLevel.getCollidingEntities(player, player.boundingBox).isEmpty()) return;
-				}
-			}
-		}
+		if (player.y < player.level.getTopY()) return;
+		NetherSpawn.spawnPlayer(player);
 	}
 }

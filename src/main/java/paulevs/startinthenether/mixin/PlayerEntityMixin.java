@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import paulevs.startinthenether.NetherSpawn;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -21,17 +22,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		shift = Shift.AFTER
 	))
 	private void startinthenether_changePlayerPos(CallbackInfo info) {
-		if (y >= level.getTopY()) {
-			int cx = (int) x;
-			int cz = (int) z;
-			PlayerEntity player = PlayerEntity.class.cast(this);
-			for (int i = 0; i < 256; i++) {
-				x = cx + level.random.nextInt(128) - 63.5;
-				z = cz + level.random.nextInt(128) - 63.5;
-				for (y = level.getBottomY(); y < level.getTopY(); y += 1) {
-					if (level.getCollidingEntities(player, player.boundingBox).isEmpty()) return;
-				}
-			}
-		}
+		if (y < level.getTopY()) return;
+		NetherSpawn.spawnPlayer(PlayerEntity.class.cast(this));
 	}
 }

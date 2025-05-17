@@ -20,7 +20,6 @@ public class ServerPlayerPacketHandlerMixin {
 		if (serverPlayer.health > 0) return;
 		serverPlayer = server.serverPlayerConnectionManager.teleportToDimension(serverPlayer, -1);
 		serverPlayer.dimensionId = -1;
-		System.out.println(serverPlayer);
 		info.cancel();
 	}
 }
